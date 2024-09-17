@@ -1,0 +1,13 @@
+CREATE OR REPLACE FUNCTION copy_reviewId_to_sentiment()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO sentiment ("reviewId") VALUES (NEW."reviewId");
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER content_insert_trigger
+AFTER INSERT ON review
+FOR EACH ROW
+EXECUTE FUNCTION copy_reviewId_to_sentiment();
